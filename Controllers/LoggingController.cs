@@ -2,6 +2,8 @@
 using NetMudCore.DataAccess;
 using NetMudCore.Models.Logging;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NetMudCore.Controllers
 {

@@ -16,30 +16,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NetMudCore.Controllers
 {
     [Authorize]
     public class ManageController : Controller
     {
-        private ApplicationSignInManager _signInManager;
+        private SignInManager<ApplicationUser>? _signInManager;
         private UserManager<ApplicationUser>? _userManager;
 
         public ManageController()
         {
         }
 
-        public ManageController(UserManager<ApplicationUser> userManager, ApplicationSignInManager signInManager)
+        public ManageController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
         }
 
-        public ApplicationSignInManager SignInManager
+        public SignInManager<ApplicationUser> SignInManager
         {
             get
             {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+                return _signInManager ?? HttpContext.RequestServices.GetRequiredService<SignInManager<ApplicationUser>>();
             }
             private set
             {
@@ -131,10 +133,9 @@ namespace NetMudCore.Controllers
             {
                 AuthedUser = UserManager.FindById(userId),
                 NewCharacter = new PlayerTemplate(),
-                ValidGenders = TemplateCache.GetAll<IGender>()
+                ValidGenders = TemplateCache.GetAll<IGender>(),
+                ValidRaces = TemplateCache.GetAll<IRace>()
             };
-
-            model.ValidRaces = TemplateCache.GetAll<IRace>();
 
             return View(model);
         }
@@ -669,12 +670,11 @@ namespace NetMudCore.Controllers
         [HttpGet]
         public async Task<ActionResult> FightingArtEditAsync(int id)
         {
-            string message = string.Empty;
             IFightingArt obj = TemplateCache.Get<IFightingArt>(id);
 
             if (obj == null)
             {
-                message = "That does not exist";
+                string message = "That does not exist";
                 return RedirectToRoute("ErrorOrClose", new { Message = message });
             }
 
@@ -1236,7 +1236,7 @@ namespace NetMudCore.Controllers
                 ApplicationUser user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
                 if (user != null)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    await SignInManager.SignInAsync(user, isPersistent: false);
                 }
                 return RedirectToAction("Index");
             }
@@ -1262,7 +1262,7 @@ namespace NetMudCore.Controllers
                     ApplicationUser user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
                     if (user != null)
                     {
-                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                        await SignInManager.SignInAsync(user, isPersistent: false);
                     }
                     return RedirectToAction("Index");
                 }
@@ -1286,19 +1286,11 @@ namespace NetMudCore.Controllers
         #endregion
 
         #region Helpers
-        private IAuthenticationManager AuthenticationManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
-        }
-
         private void AddErrors(IdentityResult result)
         {
-            foreach (string error in result.Errors)
+            foreach (var error in result.Errors)
             {
-                ModelState.AddModelError("", error);
+                ModelState.AddModelError("", String.Format("{0} ({1})", error.Description, error.Code));
             }
         }
         #endregion

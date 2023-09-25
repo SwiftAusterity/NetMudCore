@@ -52,7 +52,7 @@ namespace NetMudCore.Models
 
             if (templateType.IsInterface)
             {
-                typeName = typeName.Substring(1);
+                typeName = typeName[1..];
                 templateType = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(templateType));
             }
 
@@ -72,7 +72,7 @@ namespace NetMudCore.Models
 
             if (typeof(T).IsInterface)
             {
-                typeName = typeName.Substring(1);
+                typeName = typeName[1..];
             }
 
             string archiveDirName = fileAccessor.BaseDirectory + type.ToString() + "/" + fileAccessor.ArchiveDirectoryName;

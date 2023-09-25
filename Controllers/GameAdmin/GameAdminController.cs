@@ -9,7 +9,6 @@ using NetMudCore.DataStructure.Architectural.ActorBase;
 using NetMudCore.DataStructure.Architectural.EntityBase;
 using NetMudCore.DataStructure.Combat;
 using NetMudCore.DataStructure.Gaia;
-using NetMudCore.DataStructure.Gossip;
 using NetMudCore.DataStructure.Inanimate;
 using NetMudCore.DataStructure.Linguistic;
 using NetMudCore.DataStructure.Locale;
@@ -19,7 +18,6 @@ using NetMudCore.DataStructure.Players;
 using NetMudCore.DataStructure.Room;
 using NetMudCore.DataStructure.System;
 using NetMudCore.DataStructure.Zone;
-using NetMudCore.Gossip;
 using NetMudCore.Models.Admin;
 using System;
 using System.Collections.Generic;
@@ -27,6 +25,8 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NetMudCore.Controllers.GameAdmin
 {
@@ -59,7 +59,7 @@ namespace NetMudCore.Controllers.GameAdmin
         public async Task<ActionResult> IndexAsync()
         {
             IGlobalConfig globalConfig = ConfigDataCache.Get<IGlobalConfig>(new ConfigDataCacheKey(typeof(IGlobalConfig), "LiveSettings", ConfigDataType.GameWorld));
-            IGossipConfig gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
+            //IGossipConfig gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
 
             DashboardViewModel dashboardModel = new()
             {
@@ -113,15 +113,15 @@ namespace NetMudCore.Controllers.GameAdmin
                 ValidZones = TemplateCache.GetAll<IZoneTemplate>(true),
                 ValidLanguages = ConfigDataCache.GetAll<ILanguage>(),
 
-                GossipConfigDataObject = gossipConfig,
-                GossipActive = gossipConfig.GossipActive,
-                ClientId = gossipConfig.ClientId,
-                ClientSecret = gossipConfig.ClientSecret,
-                ClientName = gossipConfig.ClientName,
-                SuspendMultiplier = gossipConfig.SuspendMultiplier,
-                SuspendMultiplierMaximum = gossipConfig.SuspendMultiplierMaximum,
-                SupportedChannels = gossipConfig.SupportedChannels,
-                SupportedFeatures = gossipConfig.SupportedFeatures
+                //GossipConfigDataObject = gossipConfig,
+                //GossipActive = gossipConfig.GossipActive,
+                //ClientId = gossipConfig.ClientId,
+                //ClientSecret = gossipConfig.ClientSecret,
+                //ClientName = gossipConfig.ClientName,
+                //SuspendMultiplier = gossipConfig.SuspendMultiplier,
+                //SuspendMultiplierMaximum = gossipConfig.SuspendMultiplierMaximum,
+                //SupportedChannels = gossipConfig.SupportedChannels,
+                //SupportedFeatures = gossipConfig.SupportedFeatures
             };
 
             return View(dashboardModel);
@@ -199,25 +199,25 @@ namespace NetMudCore.Controllers.GameAdmin
                 server.Abort();
             }
 
-            IGossipConfig gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
-            Func<Member[]> playerList = () => LiveCache.GetAll<IPlayer>()
-                .Where(player => player.Descriptor != null && player.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
-                .Select(player => new Member()
-                {
-                    Name = player.AccountHandle,
-                    WriteTo = (message) => player.WriteTo(new string[] { message }),
-                    BlockedMembers = player.Template<IPlayerTemplate>().Account.Config.Acquaintences.Where(acq => !acq.IsFriend).Select(acq => acq.PersonHandle),
-                    Friends = player.Template<IPlayerTemplate>().Account.Config.Acquaintences.Where(acq => acq.IsFriend).Select(acq => acq.PersonHandle)
-                }).ToArray();
+            //IGossipConfig gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
+            //Func<Member[]> playerList = () => LiveCache.GetAll<IPlayer>()
+            //    .Where(player => player.Descriptor != null && player.Template<IPlayerTemplate>().Account.Config.GossipSubscriber)
+            //    .Select(player => new Member()
+            //    {
+            //        Name = player.AccountHandle,
+            //        WriteTo = (message) => player.WriteTo(new string[] { message }),
+            //        BlockedMembers = player.Template<IPlayerTemplate>().Account.Config.Acquaintences.Where(acq => !acq.IsFriend).Select(acq => acq.PersonHandle),
+            //        Friends = player.Template<IPlayerTemplate>().Account.Config.Acquaintences.Where(acq => acq.IsFriend).Select(acq => acq.PersonHandle)
+            //    }).ToArray();
 
-            void exceptionLogger(Exception ex) => LoggingUtility.LogError(ex);
-            void activityLogger(string message) => LoggingUtility.Log(message, LogChannels.GossipServer);
+            //void exceptionLogger(Exception ex) => LoggingUtility.LogError(ex);
+            //void activityLogger(string message) => LoggingUtility.Log(message, LogChannels.GossipServer);
 
-            GossipClient gossipServer = new(gossipConfig, exceptionLogger, activityLogger, playerList);
+            //GossipClient gossipServer = new(gossipConfig, exceptionLogger, activityLogger, playerList);
 
-            Task.Run(() => gossipServer.Launch());
+            //Task.Run(() => gossipServer.Launch());
 
-            LiveCache.Add(gossipServer, "GossipWebClient");
+            //LiveCache.Add(gossipServer, "GossipWebClient");
 
             return RedirectToAction("Index", new { Message = "Gossip Server Restarted" });
         }
@@ -262,27 +262,27 @@ namespace NetMudCore.Controllers.GameAdmin
         public async Task<ActionResult> GossipConfigAsync(DashboardViewModel vModel)
         {
             ApplicationUser? authedUser = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
-            IGossipConfig gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
+            //IGossipConfig gossipConfig = ConfigDataCache.Get<IGossipConfig>(new ConfigDataCacheKey(typeof(IGossipConfig), "GossipSettings", ConfigDataType.GameWorld));
 
-            gossipConfig.GossipActive = vModel.GossipActive;
-            gossipConfig.ClientId = vModel.ClientId;
-            gossipConfig.ClientName = vModel.ClientName;
-            gossipConfig.ClientSecret = vModel.ClientSecret;
-            gossipConfig.SuspendMultiplierMaximum = vModel.SuspendMultiplierMaximum;
-            gossipConfig.SuspendMultiplier = vModel.SuspendMultiplier;
-            gossipConfig.SupportedChannels = vModel.SupportedChannels;
-            gossipConfig.SupportedFeatures = vModel.SupportedFeatures;
+            //gossipConfig.GossipActive = vModel.GossipActive;
+            //gossipConfig.ClientId = vModel.ClientId;
+            //gossipConfig.ClientName = vModel.ClientName;
+            //gossipConfig.ClientSecret = vModel.ClientSecret;
+            //gossipConfig.SuspendMultiplierMaximum = vModel.SuspendMultiplierMaximum;
+            //gossipConfig.SuspendMultiplier = vModel.SuspendMultiplier;
+            //gossipConfig.SupportedChannels = vModel.SupportedChannels;
+            //gossipConfig.SupportedFeatures = vModel.SupportedFeatures;
 
-            string message;
-            if (gossipConfig.Save(authedUser.GameAccount, ApplicationUser.GetStaffRank(User)))
-            {
-                LoggingUtility.LogAdminCommandUsage("*WEB* - EditGossipConfig[" + gossipConfig.UniqueKey.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
-                message = "Edit Successful.";
-            }
-            else
-            {
-                message = "Error; Edit failed.";
-            }
+            //string message;
+            //if (gossipConfig.Save(authedUser.GameAccount, ApplicationUser.GetStaffRank(User)))
+            //{
+            //    LoggingUtility.LogAdminCommandUsage("*WEB* - EditGossipConfig[" + gossipConfig.UniqueKey.ToString() + "]", authedUser.GameAccount.GlobalIdentityHandle);
+            //    message = "Edit Successful.";
+            //}
+            //else
+            //{
+            //    message = "Error; Edit failed.";
+            //}
 
             return RedirectToAction("Index", new { Message = message });
         }

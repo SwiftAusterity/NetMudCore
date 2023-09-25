@@ -17,6 +17,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NetMudCore.Controllers.GameAdmin
 {
@@ -120,12 +122,11 @@ namespace NetMudCore.Controllers.GameAdmin
             {
                 AuthedUser = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty),
                 ValidWorlds = TemplateCache.GetAll<IGaiaTemplate>(true),
-                DataObject = new ZoneTemplate()
+                DataObject = new ZoneTemplate(),
+                FloraNaturalResources = TemplateCache.GetAll<IFlora>(true),
+                FaunaNaturalResources = TemplateCache.GetAll<IFauna>(true),
+                MineralNaturalResources = TemplateCache.GetAll<IMineral>(true)
             };
-
-            vModel.FloraNaturalResources = TemplateCache.GetAll<IFlora>(true);
-            vModel.FaunaNaturalResources = TemplateCache.GetAll<IFauna>(true);
-            vModel.MineralNaturalResources = TemplateCache.GetAll<IMineral>(true);
 
             return View("~/Views/GameAdmin/Zone/Add.cshtml", vModel);
         }
@@ -167,12 +168,11 @@ namespace NetMudCore.Controllers.GameAdmin
             {
                 AuthedUser = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty),
                 DataObject = obj,
-                ValidWorlds = TemplateCache.GetAll<IGaiaTemplate>(true)
+                ValidWorlds = TemplateCache.GetAll<IGaiaTemplate>(true),
+                FloraNaturalResources = TemplateCache.GetAll<IFlora>(true),
+                FaunaNaturalResources = TemplateCache.GetAll<IFauna>(true),
+                MineralNaturalResources = TemplateCache.GetAll<IMineral>(true)
             };
-
-            vModel.FloraNaturalResources = TemplateCache.GetAll<IFlora>(true);
-            vModel.FaunaNaturalResources = TemplateCache.GetAll<IFauna>(true);
-            vModel.MineralNaturalResources = TemplateCache.GetAll<IMineral>(true);
 
             return View("~/Views/GameAdmin/Zone/Edit.cshtml", vModel);
         }
@@ -348,7 +348,7 @@ namespace NetMudCore.Controllers.GameAdmin
             {
                 vModel.SensoryEventDataObject = new SensoryEvent
                 {
-                    Event = new Linguistic.Lexica()
+                    Event = new Data.Linguistic.Lexica()
                 };
             }
 
@@ -377,7 +377,7 @@ namespace NetMudCore.Controllers.GameAdmin
                 existingOccurrence = new SensoryEvent(vModel.SensoryEventDataObject.SensoryType)
                 {
                     Strength = vModel.SensoryEventDataObject.Strength,
-                    Event = new Linguistic.Lexica(vModel.SensoryEventDataObject.Event.Type,
+                    Event = new Data.Linguistic.Lexica(vModel.SensoryEventDataObject.Event.Type,
                                         vModel.SensoryEventDataObject.Event.Role,
                                         vModel.SensoryEventDataObject.Event.Phrase, new LexicalContext(null))
                     {
@@ -389,7 +389,7 @@ namespace NetMudCore.Controllers.GameAdmin
             {
                 existingOccurrence.Strength = vModel.SensoryEventDataObject.Strength;
                 existingOccurrence.SensoryType = vModel.SensoryEventDataObject.SensoryType;
-                existingOccurrence.Event = new Linguistic.Lexica(vModel.SensoryEventDataObject.Event.Type,
+                existingOccurrence.Event = new Data.Linguistic.Lexica(vModel.SensoryEventDataObject.Event.Type,
                                                         vModel.SensoryEventDataObject.Event.Role,
                                                         vModel.SensoryEventDataObject.Event.Phrase, new LexicalContext(null))
                 {

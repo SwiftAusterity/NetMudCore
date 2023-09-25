@@ -5,6 +5,8 @@ using NetMudCore.DataStructure.Administrative;
 using NetMudCore.DataStructure.Gaia;
 using NetMudCore.Models.Admin;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NetMudCore.Controllers.GameAdmin
 {

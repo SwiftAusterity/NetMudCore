@@ -1,4 +1,6 @@
-﻿using NetMudCore.Communication.Lexical;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using NetMudCore.Communication.Lexical;
 using NetMudCore.Data.Architectural.EntityBase;
 using NetMudCore.Data.Room;
 using NetMudCore.Data.Zone;
@@ -21,7 +23,7 @@ namespace NetMudCore.Models
                 //Convert the interface to the concrete class by finding a concrete class that impls this interface
                 if (!modelType.IsGenericType)
                 {
-                    Type type = null;
+                    Type type;
 
                     if (modelType == typeof(ILocationData))
                     {
@@ -58,14 +60,8 @@ namespace NetMudCore.Models
                 else
                 {
                     //Our interface involves generics so go find the concrete class by type name match so we can build it out using the correct type for the generic parameter
-                    string genericName = modelType.Name.Substring(1);
-                    Type type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.IsGenericType && x.Name.Equals(genericName));
-
-                    if (type == null)
-                    {
-                        throw new Exception("Invalid Binding Interface");
-                    }
-
+                    string genericName = modelType.Name[1..];
+                    Type type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.IsGenericType && x.Name.Equals(genericName)) ?? throw new Exception("Invalid Binding Interface");
                     Type genericType = type.MakeGenericType(modelType.GenericTypeArguments);
                     object concreteInstance = Activator.CreateInstance(genericType);
 
@@ -79,7 +75,7 @@ namespace NetMudCore.Models
             return base.CreateModel(controllerContext, bindingContext, modelType);
         }
 
-        protected override void BindProperty(ControllerContext controllerContext, ModelBindingContext bindingContext, PropertyDescriptor propertyDescriptor)
+        protected override void BindProperty(Microsoft.AspNetCore.Mvc.ControllerContext controllerContext, ModelBindingContext bindingContext, PropertyDescriptor propertyDescriptor)
         {
             // Check if the property has the PropertyBinderAttribute, meaning it's specifying a different binder to use.
             PropertyBinderAttribute propertyBinderAttribute = TryFindPropertyBinderAttribute(propertyDescriptor);
@@ -99,7 +95,7 @@ namespace NetMudCore.Models
                     foreach (KeyValuePair<string, string> key in formValueProvider.GetKeysFromPrefix(keyName))
                     {
                         string oldKey = key.Value;
-                        string reKeyedKey = string.Format("{1}[{0}]{2}", i, oldKey.Substring(0, oldKey.IndexOf('[')), oldKey.Substring(oldKey.IndexOf(']') + 1));
+                        string reKeyedKey = string.Format("{1}[{0}]{2}", i, oldKey[..oldKey.IndexOf('[')], oldKey[(oldKey.IndexOf(']') + 1)..]);
 
                         keys.Add(reKeyedKey);
 
@@ -115,20 +111,20 @@ namespace NetMudCore.Models
                     ValueProviderResult value = bindingContext.ValueProvider.GetValue(keyName);
 
                     //Bound values *on* the view model tend to double their names due to stupidity
-                    if (value == null)
+                    if (!value.Any())
                     {
                         value = bindingContext.ValueProvider.GetValue(string.Format("{0}.{0}", propertyDescriptor.Name));
                     }
 
-                    if (value == null)
+                    if (!value.Any())
                     {
                         value = bindingContext.ValueProvider.GetValue(string.Format("{0}.{1}.{1}", bindingContext.ModelName, propertyDescriptor.Name));
                     }
 
-                    if (value != null)
+                    if (!value.Any())
                     {
                         //If we got the value we're good just set it
-                        propertyDescriptor.SetValue(bindingContext.Model, propertyBinderAttribute.Convert(value.AttemptedValue));
+                        propertyDescriptor.SetValue(bindingContext.Model, propertyBinderAttribute.Convert(value.First()));
                     }
                     else if ((propertyDescriptor.PropertyType.IsInterface || propertyDescriptor.PropertyType.IsClass) && !typeof(string).Equals(propertyDescriptor.PropertyType))
                     {
@@ -153,7 +149,7 @@ namespace NetMudCore.Models
                                 foreach (KeyValuePair<string, string> key in formValueProvider.GetKeysFromPrefix(childKeyName))
                                 {
                                     string oldKey = key.Value;
-                                    string reKeyedKey = string.Format("{1}[{0}]{2}", index, oldKey.Substring(0, oldKey.IndexOf('[')), oldKey.Substring(oldKey.IndexOf(']') + 1));
+                                    string reKeyedKey = string.Format("{1}[{0}]{2}", index, oldKey[..oldKey.IndexOf('[')], oldKey[(oldKey.IndexOf(']') + 1)..]);
 
                                     keys.Add(reKeyedKey);
 
@@ -348,7 +344,7 @@ namespace NetMudCore.Models
                                     foreach (KeyValuePair<string, string> key in formValueProvider.GetKeysFromPrefix(childKeyName))
                                     {
                                         string oldKey = key.Value;
-                                        string reKeyedKey = string.Format("{1}[{0}]{2}", index, oldKey.Substring(0, oldKey.LastIndexOf('[')), oldKey.Substring(oldKey.LastIndexOf(']') + 1));
+                                        string reKeyedKey = string.Format("{1}[{0}]{2}", index, oldKey[..oldKey.LastIndexOf('[')], oldKey[(oldKey.LastIndexOf(']') + 1)..]);
 
                                         keys.Add(reKeyedKey);
 
@@ -419,7 +415,7 @@ namespace NetMudCore.Models
                                                         foreach (KeyValuePair<string, string> key in formValueProvider.GetKeysFromPrefix(innerChildKeyName))
                                                         {
                                                             string oldKey = key.Value;
-                                                            string reKeyedKey = string.Format("{1}[{0}]{2}", innerIndex, oldKey.Substring(0, oldKey.IndexOf('[')), oldKey.Substring(oldKey.IndexOf(']') + 1));
+                                                            string reKeyedKey = string.Format("{1}[{0}]{2}", innerIndex, oldKey[..oldKey.IndexOf('[')], oldKey[(oldKey.IndexOf(']') + 1)..]);
 
                                                             innerKeys.Add(reKeyedKey);
 
@@ -559,7 +555,7 @@ namespace NetMudCore.Models
             base.BindProperty(controllerContext, bindingContext, propertyDescriptor);
         }
 
-        PropertyBinderAttribute TryFindPropertyBinderAttribute(PropertyDescriptor propertyDescriptor)
+        static PropertyBinderAttribute TryFindPropertyBinderAttribute(PropertyDescriptor propertyDescriptor)
         {
             PropertyBinderAttribute binder = propertyDescriptor.Attributes.OfType<PropertyBinderAttribute>().FirstOrDefault();
 
@@ -606,7 +602,7 @@ namespace NetMudCore.Models
                 else
                 {
                     //Our interface involves generics so go find the concrete class by type name match so we can build it out using the correct type for the generic parameter
-                    string genericName = componentType.Name.Substring(1);
+                    string genericName = componentType.Name[1..];
                     Type type = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.IsGenericType && x.Name.Equals(genericName));
 
                     if (type == null)

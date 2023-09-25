@@ -12,6 +12,8 @@ using NetMudCore.Models.Admin;
 using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NetMudCore.Controllers.GameAdmin
 {
@@ -121,10 +123,7 @@ namespace NetMudCore.Controllers.GameAdmin
                 IRoomTemplate destination = TemplateCache.Get<IRoomTemplate>(destinationRoomId);
                 IPathwayTemplate pathwayTemplate = TemplateCache.Get<IPathwayTemplate>(id);
 
-                if(pathwayTemplate == null)
-                {
-                    pathwayTemplate = new PathwayTemplate() { Origin = origin, Destination = destination, DegreesFromNorth = degreesFromNorth, InclineGrade = incline };
-                }
+                pathwayTemplate ??= new PathwayTemplate() { Origin = origin, Destination = destination, DegreesFromNorth = degreesFromNorth, InclineGrade = incline };
 
                 AddEditPathwayTemplateViewModel vModel = new()
                 {
@@ -305,7 +304,7 @@ namespace NetMudCore.Controllers.GameAdmin
             {
                 vModel.SensoryEventDataObject = new SensoryEvent
                 {
-                    Event = new Linguistic.Lexica()
+                    Event = new Data.Linguistic.Lexica()
                 };
             }
 
@@ -334,7 +333,7 @@ namespace NetMudCore.Controllers.GameAdmin
                 existingOccurrence = new SensoryEvent(vModel.SensoryEventDataObject.SensoryType)
                 {
                     Strength = vModel.SensoryEventDataObject.Strength,
-                    Event = new Linguistic.Lexica(vModel.SensoryEventDataObject.Event.Type,
+                    Event = new Data.Linguistic.Lexica(vModel.SensoryEventDataObject.Event.Type,
                                         vModel.SensoryEventDataObject.Event.Role,
                                         vModel.SensoryEventDataObject.Event.Phrase, new LexicalContext(null))
                     {
@@ -346,7 +345,7 @@ namespace NetMudCore.Controllers.GameAdmin
             {
                 existingOccurrence.Strength = vModel.SensoryEventDataObject.Strength;
                 existingOccurrence.SensoryType = vModel.SensoryEventDataObject.SensoryType;
-                existingOccurrence.Event = new Linguistic.Lexica(vModel.SensoryEventDataObject.Event.Type,
+                existingOccurrence.Event = new Data.Linguistic.Lexica(vModel.SensoryEventDataObject.Event.Type,
                                                         vModel.SensoryEventDataObject.Event.Role,
                                                         vModel.SensoryEventDataObject.Event.Phrase, new LexicalContext(null))
                 {

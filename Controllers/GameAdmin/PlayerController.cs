@@ -4,6 +4,8 @@ using NetMudCore.DataAccess;
 using NetMudCore.Models.Admin;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NetMudCore.Controllers.GameAdmin
 {
@@ -50,9 +52,9 @@ namespace NetMudCore.Controllers.GameAdmin
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public ActionResult Index(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
+        public async Task<ActionResult> IndexAsync(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+            RoleManager<IdentityRole> roleManager = new(new RoleStore<IdentityRole>(new ApplicationDbContext()));
 
             ManagePlayersViewModel vModel = new(UserManager.Users)
             {
@@ -79,7 +81,7 @@ namespace NetMudCore.Controllers.GameAdmin
             {
                 ApplicationUser? authedUser = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
 
-                DataStructure.Player.IAccount obj = Account.GetByHandle(removeId);
+                DataStructure.Players.IAccount obj = Account.GetByHandle(removeId);
 
                 if (obj == null)
                 {

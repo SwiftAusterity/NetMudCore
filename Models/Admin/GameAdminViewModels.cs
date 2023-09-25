@@ -5,7 +5,6 @@ using NetMudCore.DataStructure.Architectural.ActorBase;
 using NetMudCore.DataStructure.Architectural.EntityBase;
 using NetMudCore.DataStructure.Combat;
 using NetMudCore.DataStructure.Gaia;
-using NetMudCore.DataStructure.Gossip;
 using NetMudCore.DataStructure.Inanimate;
 using NetMudCore.DataStructure.Linguistic;
 using NetMudCore.DataStructure.Locale;
@@ -210,7 +209,7 @@ namespace NetMudCore.Models.Admin
         [DataType(DataType.Text)]
         public string BackupName { get; set; }
 
-        public IGossipConfig GossipConfigDataObject { get; set; }
+        //public IGossipConfig GossipConfigDataObject { get; set; }
         public IEnumerable<ILanguage> ValidLanguages { get; set; }
         public IEnumerable<IZoneTemplate> ValidZones { get; set; }
         public IGlobalConfig ConfigDataObject { get; set; }

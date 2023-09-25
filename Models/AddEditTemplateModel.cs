@@ -52,7 +52,7 @@ namespace NetMudCore.Models
 
             if (typeof(T).IsInterface)
             {
-                typeName = typeName.Substring(1);
+                typeName = typeName[1..];
                 templateType = typeof(EntityPartial).Assembly.GetTypes().SingleOrDefault(x => !x.IsAbstract && x.GetInterfaces().Contains(typeof(T)));
             }
 
@@ -74,7 +74,7 @@ namespace NetMudCore.Models
 
             if(typeof(T).IsInterface)
             {
-                typeName = typeName.Substring(1);
+                typeName = typeName[1..];
             }
 
             return filesDirectory.EnumerateDirectories().Where(dir => dir.GetDirectories(typeName, SearchOption.TopDirectoryOnly).Any())

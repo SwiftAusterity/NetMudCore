@@ -6,6 +6,8 @@ using NetMudCore.DataStructure.Administrative;
 using NetMudCore.DataStructure.Architectural.EntityBase;
 using NetMudCore.Models.Admin;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NetMudCore.Controllers.GameAdmin
 {

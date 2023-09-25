@@ -6,6 +6,8 @@ using NetMudCore.DataStructure.Administrative;
 using NetMudCore.DataStructure.Combat;
 using NetMudCore.Models.Admin;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NetMudCore.Controllers.GameAdmin
 {
@@ -138,12 +140,11 @@ namespace NetMudCore.Controllers.GameAdmin
         [HttpGet]
         public async Task<ActionResult> EditAsync(int id)
         {
-            string message = string.Empty;
             IFightingArt obj = TemplateCache.Get<IFightingArt>(id);
 
             if (obj == null)
             {
-                message = "That does not exist";
+                string message = "That does not exist";
                 return RedirectToRoute("ErrorOrClose", new { Message = message });
             }
 
