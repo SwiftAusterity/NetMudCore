@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NetMudCore.Commands\NetMudCore.Commands.csproj" />
+    <ProjectReference Include="..\NetMudCore.Communication\NetMudCore.Communication.csproj" />
+    <ProjectReference Include="..\NetMudCore.DataAccess\NetMudCore.DataAccess.csproj" />
+    <ProjectReference Include="..\NetMudCore.DataStructure\NetMudCore.DataStructure.csproj" />
+    <ProjectReference Include="..\NetMudCore.Data\NetMudCore.Data.csproj" />
+    <ProjectReference Include="..\NetMudCore.Utility\NetMudCore.Utility.csproj" />
+  </ItemGroup>
+</Project>

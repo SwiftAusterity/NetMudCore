@@ -1,0 +1,34 @@
+﻿@model NetMudCore.Models.Logging.DashboardViewModel
+
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Live Log View", new string[] { "Dashboard", "Logs" }, new string[] { "/GameAdmin", "/Logging" });
+}
+
+<div style="padding-bottom: 25px;">
+    <div class="form-group row">
+        @using (Html.BeginForm("Index", "Logging", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.DescriptiveLabelFor(m => m.SelectedLog, new { @class = "col-sm-2 col-form-label" })
+            <div class="col-sm-2">
+                @Html.DropDownList("SelectedLog", Model.ChannelNames.Select(rl =>
+                            new SelectListItem() { Text = rl, Value = rl })
+                            , "Select One", htmlAttributes: new { id = "selectedLog", Style = "padding: 7px;" })
+            </div>
+            <div>
+                <input type="submit" value="Load" class="btn btn-default" />
+            </div>
+        }
+    </div>
+
+    @if (!String.IsNullOrWhiteSpace(Model.SelectedLogContent))
+    {
+        using (Html.BeginForm("Rollover", "Logging", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <input type="hidden" name="SelectedLog" value="@Model.SelectedLog" />
+            <textarea id="logContent" name="logContent" readonly="readonly" class="logDisplay">@Model.SelectedLogContent</textarea>
+            <br />
+            <input type="submit" value="Rollover" class="btn btn-default" style="margin-top: 15px; color: orangered;" />
+        }
+    }
+</div>

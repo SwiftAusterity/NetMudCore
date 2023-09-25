@@ -1,0 +1,22 @@
+﻿@model NetMudCore.Models.Admin.AddEditJournalEntryViewModel
+
+@{
+    ViewBag.Breadcrumbs = new Tuple<string, string[], string[]>("Edit Entry", new string[] { "Dashboard", "Journal Entries" }, new string[] { "/GameAdmin", "/JournalEntry" });
+}
+
+<section id="newEntryForm">
+    @using (Html.BeginForm("Edit", "JournalEntry", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <input type="hidden" name="id" id="id" value="@Model.DataObject.Id" />
+
+        @Html.EditorFor(m => m.DataObject)
+
+        @Html.Partial("SubmitButton", new NetMudCore.Models.SubmitButtonModel() { SubmitName = "Save", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "JournalEntry", IncludeCancel = true })
+    }
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

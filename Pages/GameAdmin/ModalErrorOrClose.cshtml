@@ -1,0 +1,17 @@
+﻿@model string
+
+@{
+    Layout = "~/Views/Shared/_chromelessLayout.cshtml";
+}
+
+<div id="messagePlace"></div>
+
+<script type="text/javascript">
+    var message = '@Model';
+
+    if (message === '') {
+        window.close();
+    } else {
+        $('#messagePlace').html(message);
+    }
+</script>

@@ -1,0 +1,23 @@
+﻿@using NetMudCore.Models
+@model LoginViewModel
+
+<section id="loginForm">
+    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <h4>Log in or @Html.ActionLink("register a new account", "Register") to get started.</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group row">
+            @Html.EditorFor(m => m.Email)
+            @Html.EditorFor(m => m.Password)
+            @Html.EditorFor(m => m.RememberMe)
+        </div>
+        @Html.Partial("SubmitButton", new NetMudCore.Models.SubmitButtonModel() { SubmitName = "Login", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Home", IncludeCancel = false })
+        @Html.ActionLink("Forgot your password?", "ForgotPassword")
+    }
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

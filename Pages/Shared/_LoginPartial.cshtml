@@ -1,26 +1,77 @@
-﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@using NetMudCore.Authentication
 
-<ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
+@{
+    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+    var authUser = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
+}
+
+@if (Request.IsAuthenticated)
 {
-    <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
-    </li>
-    <li class="nav-item">
-        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post" >
-            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-        </form>
-    </li>
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <ul class="nav navbar-nav navbar-right">
+            <li>@Html.ActionLink("Test Client", "Index", "GameClient", routeValues: null, htmlAttributes: new { title = "The Game Client", Style = "color: orange" })</li>
+            <li id="currentCharacterSelector">
+                @if (authUser.GameAccount.Characters.Count() > 0)
+                {
+                    @Html.DropDownList("CurrentlySelectedCharacter", authUser.GameAccount.Characters.Select(ch =>
+                     new SelectListItem() { Text = ch.FullName()
+                                     , Value = ch.Id.ToString()
+                                     , Selected = authUser.GameAccount.CurrentlySelectedCharacter >= 0 && authUser.GameAccount.CurrentlySelectedCharacter.Equals(ch.Id) })
+                                     , "Select One", htmlAttributes: new { id = "currentCharacter", Style = "margin: 15px;" })
+                }
+                else
+                {
+                    @Html.ActionLink("Create a Character", "ManageCharacters", "Manage", routeValues: null, htmlAttributes: new { id = "ManageCharacters" })
+                }
+            </li>
+            <li>
+                <a href="/manage/notifications" id="notificationsBell"><span class="glyphicon glyphicon-bell" /></a>
+            </li>
+            <li>
+                <div style="padding-top: 15px; padding-bottom: 15px;">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Hello @authUser.GameAccount.GlobalIdentityHandle<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+                        <li class="dropdown-header" style="color: mediumvioletred">Management</li>
+                        <li>@Html.ActionLink("Dashboard", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })</li>
+                        <li>@Html.ActionLink("Manage Characters", "ManageCharacters", "Manage", routeValues: null, htmlAttributes: new { title = "Manage Characters" })</li>
+                        <li><a href="#" id="bugReport">Report A Bug</a></li>
+                        @if (User.IsInRole("Admin") || User.IsInRole("Builder"))
+                        {
+                            <li class="divider"></li>
+                            <li class="dropdown-header" style="color: mediumvioletred">Administrative</li>
+                            <li>@Html.ActionLink("Dashboard", "Index", "GameAdmin", routeValues: null, htmlAttributes: new { title = "Dashboard" })</li>
+                            <li>@Html.ActionLink("Logs", "Index", "Logging", routeValues: null, htmlAttributes: new { title = "Logs" })</li>
+                            <li>@Html.ActionLink("Content Approval", "Index", "ContentApproval", routeValues: null, htmlAttributes: new { title = "Content Approval" })</li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li>@Html.ActionLink("Manage Players", "Index", "Player", routeValues: null, htmlAttributes: new { title = "Manage Players" })</li>
+                        }
+                        <li class="divider"></li>
+                        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    }
 }
 else
 {
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
+    <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
 }
-</ul>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#bugReport').click(function () {
+            openFrameless(1000, 500, 500, 500, '/Home/ReportBug', 'Report A Bug');
+
+            return false;
+        });
+    });
+</script>

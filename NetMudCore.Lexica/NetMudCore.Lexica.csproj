@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NetMudCore.DataAccess\NetMudCore.DataAccess.csproj" />
+    <ProjectReference Include="..\NetMudCore.Utility\NetMudCore.Utility.csproj" />
+  </ItemGroup>
+</Project>

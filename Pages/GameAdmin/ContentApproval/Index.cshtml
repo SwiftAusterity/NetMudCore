@@ -1,0 +1,66 @@
+﻿@model NetMudCore.Models.Admin.ManageContentApprovalsViewModel
+<h3>Content Approval and Preview</h3>
+@{
+    Model.ModelEntityType = "ContentApproval";
+}
+<div class="searchCriteria">
+    @Html.Partial("SearchCriteriaAndPaging", Model)
+</div>
+
+@if (User.IsInRole("Admin"))
+{
+    using (Html.BeginForm("ApproveAll", "ContentApproval"))
+    {
+        @Html.AntiForgeryToken()
+        <input type="submit" value="Approve All" class="btn btn-default save" />
+    }
+}
+@using (Html.BeginForm("ApproveDeny", "ContentApproval"))
+{
+    @Html.AntiForgeryToken()
+    <div class="listTable">
+        <div class="listSection listHeader">
+            <div class="listItem" scope="col">Type</div>
+            <div class="listItem" scope="col">Id</div>
+            <div class="listItem" scope="col">Name</div>
+            <div class="listItem" scope="col">Preview</div>
+            <div class="listItem">APPROVE</div>
+            <div class="listItem">DENY</div>
+        </div>
+        <div class="listSection listContent">
+            @foreach (var val in Model.Items)
+            {
+                <div class="listRow">
+                    <div class="listItem">@val.GetType().Name</div>
+                    <div class="listItem">@val.Id</div>
+                    <div class="listItem">@val.Name</div>
+                    <div class="listItem">
+                        <div class="accordionWrapper">
+                            <h5>Fields</h5>
+                            <div class="significantFields">
+                                @foreach (var detail in val.SignificantDetails())
+                                {
+                                    <div>
+                                        <span>@detail.Key</span>
+                                        <span>@detail.Value</span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="listItem">
+                        <button type="submit" name="approvalId" id="approvalId" class="approveData" value="@val.Id" title="Approve"><span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span></button>
+                        <input type="radio" name="authorizeApproval" value="@val.Id|||@val.GetType().AssemblyQualifiedName" />
+                    </div>
+                    <div class="listItem">
+                        <button type="submit" name="denialId" id="denialId" class="unapproveData" value="@val.Id" title="Deny"><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></button>
+                        <input type="radio" name="authorizeDenial" value="@val.Id|||@val.GetType().AssemblyQualifiedName" />
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

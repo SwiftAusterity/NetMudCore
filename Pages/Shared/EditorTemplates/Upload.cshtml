@@ -1,0 +1,43 @@
+﻿@model HttpPostedFileBase
+
+@{
+    bool disabled = ViewData["disabled"] != null;
+    var cssClass = ViewData["cssClass"] == null ? "form-control" : ViewData["cssClass"];
+    var forceOptional = ViewData["forceOptional"] != null;
+    var ghostNameClass = "ghostNameTip";
+    var strippedNaked = ViewData["strippedNaked"] != null;
+
+    if (ViewData.ModelMetadata.IsRequired && !forceOptional)
+    {
+        ghostNameClass += " ghostRequired";
+    }
+}
+
+@if (strippedNaked)
+{
+    @Html.DescriptionFor(m => m)
+    if (disabled)
+    {
+        <input type="file" name="ModelFile" id="ModelFile" class="@cssClass" style="border: none;" disabled="disabled" title="@ViewData.ModelMetadata.DisplayName" placeholder="@ViewData.ModelMetadata.DisplayName" />
+    }
+    else
+    {
+        <input type="file" name="ModelFile" id="ModelFile" class="@cssClass" style="border: none;" title="@ViewData.ModelMetadata.DisplayName" placeholder="@ViewData.ModelMetadata.DisplayName" />
+    }
+}
+else
+{
+    <div>
+        <span class="@ghostNameClass">@ViewData.ModelMetadata.DisplayName</span>
+
+        @Html.DescriptionFor(m => m)
+        @if (disabled)
+        {
+            <input type="file" name="ModelFile" id="ModelFile" class="@cssClass" style="border: none;" disabled="disabled" title="@ViewData.ModelMetadata.DisplayName" placeholder="@ViewData.ModelMetadata.DisplayName" />
+        }
+        else
+        {
+            <input type="file" name="ModelFile" id="ModelFile" class="@cssClass" style="border: none;" title="@ViewData.ModelMetadata.DisplayName" placeholder="@ViewData.ModelMetadata.DisplayName" />
+        }
+    </div>
+}

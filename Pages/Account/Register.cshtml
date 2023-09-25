@@ -1,0 +1,29 @@
+﻿@model NetMudCore.Models.RegisterViewModel
+
+<section id="registerForm">
+    @if (!Model.NewUserLocked)
+    { 
+        using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <h3>Create a new account</h3>
+            @Html.ValidationSummary("", new { @class = "text-danger" })
+            <hr />
+            <h4>Account</h4>
+            <div class="form-group row">
+                @Html.EditorFor(m => m.GlobalUserHandle)
+                @Html.EditorFor(m => m.Email)
+            </div>
+            <h4>Password</h4>
+            <div class="form-group row">
+                @Html.EditorFor(m => m.Password)
+                @Html.EditorFor(m => m.ConfirmPassword)
+            </div>
+    @Html.Partial("SubmitButton", new NetMudCore.Models.SubmitButtonModel() { SubmitName = "Register", CancelName = "Cancel", ReturnAction = "Index", ReturnController = "Home", IncludeCancel = false })
+
+}
+    }
+</section>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

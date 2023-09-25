@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NetMudCore.CentralControl\NetMudCore.CentralControl.csproj" />
+    <ProjectReference Include="..\NetMudCore.Combat\NetMudCore.Combat.csproj" />
+    <ProjectReference Include="..\NetMudCore.Communication\NetMudCore.Communication.csproj" />
+    <ProjectReference Include="..\NetMudCore.DataAccess\NetMudCore.DataAccess.csproj" />
+    <ProjectReference Include="..\NetMudCore.DataStructure\NetMudCore.DataStructure.csproj" />
+    <ProjectReference Include="..\NetMudCore.Gaia\NetMudCore.Gaia.csproj" />
+    <ProjectReference Include="..\NetMudCore.Intelligence\NetMudCore.Intelligence.csproj" />
+    <ProjectReference Include="..\NetMudCore.Physics\NetMudCore.Physics.csproj" />
+  </ItemGroup>
+
+</Project>

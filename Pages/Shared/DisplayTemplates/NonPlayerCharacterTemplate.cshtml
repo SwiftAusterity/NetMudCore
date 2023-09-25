@@ -1,0 +1,14 @@
+﻿@model NetMudCore.Data.NPC.NonPlayerCharacterTemplate
+
+<div class="entityDataInfoCard">
+    <h4>@Model.FullName() - @Model.Gender</h4>
+    <hr />
+    <div>
+        <span>Race</span>
+        <span>@Model.Race.Name (of @Model.Race.CollectiveNoun)</span>
+    </div>
+    @foreach (var quality in Model.Qualities)
+    {
+        @Html.DisplayFor(m => quality)
+    }
+</div>

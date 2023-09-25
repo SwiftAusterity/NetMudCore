@@ -8,11 +8,90 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="NetMudCore.Authentication\**" />
+    <Compile Remove="NetMudCore.Backup\**" />
+    <Compile Remove="NetMudCore.Cartography\**" />
+    <Compile Remove="NetMudCore.CentralControl\**" />
+    <Compile Remove="NetMudCore.Combat\**" />
+    <Compile Remove="NetMudCore.Commands\**" />
+    <Compile Remove="NetMudCore.Communication\**" />
+    <Compile Remove="NetMudCore.DataAccess\**" />
+    <Compile Remove="NetMudCore.DataStructure\**" />
+    <Compile Remove="NetMudCore.Data\**" />
+    <Compile Remove="NetMudCore.Gaia\**" />
+    <Compile Remove="NetMudCore.Intelligence\**" />
+    <Compile Remove="NetMudCore.Interp\**" />
+    <Compile Remove="NetMudCore.Lexica\**" />
+    <Compile Remove="NetMudCore.Physics\**" />
+    <Compile Remove="NetMudCore.Utility\**" />
+    <Content Remove="NetMudCore.Authentication\**" />
+    <Content Remove="NetMudCore.Backup\**" />
+    <Content Remove="NetMudCore.Cartography\**" />
+    <Content Remove="NetMudCore.CentralControl\**" />
+    <Content Remove="NetMudCore.Combat\**" />
+    <Content Remove="NetMudCore.Commands\**" />
+    <Content Remove="NetMudCore.Communication\**" />
+    <Content Remove="NetMudCore.DataAccess\**" />
+    <Content Remove="NetMudCore.DataStructure\**" />
+    <Content Remove="NetMudCore.Data\**" />
+    <Content Remove="NetMudCore.Gaia\**" />
+    <Content Remove="NetMudCore.Intelligence\**" />
+    <Content Remove="NetMudCore.Interp\**" />
+    <Content Remove="NetMudCore.Lexica\**" />
+    <Content Remove="NetMudCore.Physics\**" />
+    <Content Remove="NetMudCore.Utility\**" />
+    <EmbeddedResource Remove="NetMudCore.Authentication\**" />
+    <EmbeddedResource Remove="NetMudCore.Backup\**" />
+    <EmbeddedResource Remove="NetMudCore.Cartography\**" />
+    <EmbeddedResource Remove="NetMudCore.CentralControl\**" />
+    <EmbeddedResource Remove="NetMudCore.Combat\**" />
+    <EmbeddedResource Remove="NetMudCore.Commands\**" />
+    <EmbeddedResource Remove="NetMudCore.Communication\**" />
+    <EmbeddedResource Remove="NetMudCore.DataAccess\**" />
+    <EmbeddedResource Remove="NetMudCore.DataStructure\**" />
+    <EmbeddedResource Remove="NetMudCore.Data\**" />
+    <EmbeddedResource Remove="NetMudCore.Gaia\**" />
+    <EmbeddedResource Remove="NetMudCore.Intelligence\**" />
+    <EmbeddedResource Remove="NetMudCore.Interp\**" />
+    <EmbeddedResource Remove="NetMudCore.Lexica\**" />
+    <EmbeddedResource Remove="NetMudCore.Physics\**" />
+    <EmbeddedResource Remove="NetMudCore.Utility\**" />
+    <None Remove="NetMudCore.Authentication\**" />
+    <None Remove="NetMudCore.Backup\**" />
+    <None Remove="NetMudCore.Cartography\**" />
+    <None Remove="NetMudCore.CentralControl\**" />
+    <None Remove="NetMudCore.Combat\**" />
+    <None Remove="NetMudCore.Commands\**" />
+    <None Remove="NetMudCore.Communication\**" />
+    <None Remove="NetMudCore.DataAccess\**" />
+    <None Remove="NetMudCore.DataStructure\**" />
+    <None Remove="NetMudCore.Data\**" />
+    <None Remove="NetMudCore.Gaia\**" />
+    <None Remove="NetMudCore.Intelligence\**" />
+    <None Remove="NetMudCore.Interp\**" />
+    <None Remove="NetMudCore.Lexica\**" />
+    <None Remove="NetMudCore.Physics\**" />
+    <None Remove="NetMudCore.Utility\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="7.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="NetMudCore.Authentication\NetMudCore.Authentication.csproj" />
+    <ProjectReference Include="NetMudCore.Backup\NetMudCore.Backup.csproj" />
+    <ProjectReference Include="NetMudCore.CentralControl\NetMudCore.CentralControl.csproj" />
+    <ProjectReference Include="NetMudCore.Commands\NetMudCore.Commands.csproj" />
+    <ProjectReference Include="NetMudCore.DataAccess\NetMudCore.DataAccess.csproj" />
+    <ProjectReference Include="NetMudCore.DataStructure\NetMudCore.DataStructure.csproj" />
+    <ProjectReference Include="NetMudCore.Data\NetMudCore.Data.csproj" />
+    <ProjectReference Include="NetMudCore.Utility\NetMudCore.Utility.csproj" />
   </ItemGroup>
 
 </Project>

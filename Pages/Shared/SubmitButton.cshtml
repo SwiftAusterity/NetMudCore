@@ -1,0 +1,25 @@
+﻿@model NetMudCore.Models.SubmitButtonModel
+
+@{ 
+    if(Model.ReturnRouteValues == null && !string.IsNullOrWhiteSpace(Model.ReturnController))
+    {
+        Model.ReturnRouteValues = new { controller = Model.ReturnController };
+    }
+}
+
+<div class="form-group row submitButtons">
+    <div>
+        <input type="submit" value="@Model.SubmitName" class="btn btn-default save" />
+        @if (Model.IncludeCancel)
+        {
+            if (Model.ModalWindow)
+            {
+                @Html.ActionLink(Model.CancelName, "ModalErrorOrClose", new { controller = "GameAdmin" }, new { @class = "btn btn-default cancel" })
+            }
+            else
+            {
+                @Html.ActionLink(Model.CancelName, Model.ReturnAction, Model.ReturnRouteValues, new { @class = "btn btn-default cancel" })
+            }
+        }
+    </div>
+</div>
