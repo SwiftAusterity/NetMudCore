@@ -8,24 +8,22 @@ using NetMudCore.DataStructure.Linguistic;
 using NetMudCore.DataStructure.Players;
 using NetMudCore.DataStructure.Room;
 using NetMudCore.Physics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using AlloyTemplates;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NetMudCore.Controllers
 {
+    [ApiController]
     [Authorize]
-    public class ClientDataApiController : ApiController
+    public class ClientDataApiController : Controller
     {
         private UserManager<ApplicationUser>? _userManager;
         public UserManager<ApplicationUser> UserManager
         {
             get
             {
-                return _userManager ?? HttpContextHelper.Current.GetOwinContext().GetUserManager<UserManager<ApplicationUser>>();
+                return _userManager ?? HttpContext.RequestServices.GetRequiredService<UserManager<ApplicationUser>>();
             }
             private set
             {
@@ -35,24 +33,26 @@ namespace NetMudCore.Controllers
 
         [HttpPost]
         [Route("api/ClientDataApi/ToggleTutorialMode", Name = "ClientDataAPI_ToggleTutorialMode")]
-        public async Task<JsonResult<bool>> ToggleTutorialModeAsync()
+        public async Task<JsonResult> ToggleTutorialModeAsync()
         {
-            ApplicationUser user = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
+            ApplicationUser? user = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
 
-            if(user != null)
+            if(user == null)
             {
-                user.GameAccount.Config.UITutorialMode = !user.GameAccount.Config.UITutorialMode;
-                user.GameAccount.Config.Save(user.GameAccount, StaffRank.Admin);
+                return Json(false);
             }
+
+            user.GameAccount.Config.UITutorialMode = !user.GameAccount.Config.UITutorialMode;
+            user.GameAccount.Config.Save(user.GameAccount, StaffRank.Admin);
 
             return Json(user.GameAccount.Config.UITutorialMode);
         }
 
         [HttpPost]
         [Route("api/ClientDataApi/ToggleTutorialMode/{language}", Name = "ClientDataAPI_ChangeLanguage")]
-        public async Task<JsonResult<bool>> ChangeUILanguageAsync(string language)
+        public async Task<JsonResult> ChangeUILanguageAsync(string language)
         {
-            ApplicationUser user = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
+            ApplicationUser? user = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
 
             ILanguage lang = ConfigDataCache.Get<ILanguage>(new ConfigDataCacheKey(typeof(ILanguage), language, ConfigDataType.Language));
 
@@ -60,9 +60,11 @@ namespace NetMudCore.Controllers
             {
                 user.GameAccount.Config.UILanguage = lang;
                 user.GameAccount.Config.Save(user.GameAccount, StaffRank.Admin);
+
+                return Json(user.GameAccount.Config.UITutorialMode);
             }
 
-            return Json(user.GameAccount.Config.UITutorialMode);
+            return Json(false);
         }
 
         [HttpGet]
@@ -92,7 +94,7 @@ namespace NetMudCore.Controllers
         }
 
         [HttpGet]
-        public JsonResult<IUIModule> GetUIModuleContent(string moduleName)
+        public JsonResult GetUIModuleContent(string moduleName)
         {
             IUIModule module = TemplateCache.GetByName<IUIModule>(moduleName);
 
@@ -101,14 +103,14 @@ namespace NetMudCore.Controllers
                 return Json(module);
             }
 
-            return null;
+            return Json(null);
         }
 
         [HttpPost]
         [Route("api/ClientDataApi/ToggleSoundMute", Name = "ClientDataAPI_ToggleSoundMute")]
-        public async Task<JsonResult<bool>> ToggleSoundMuteAsync()
+        public async Task<JsonResult> ToggleSoundMuteAsync()
         {
-            ApplicationUser user = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
+            ApplicationUser? user = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
 
             if (user != null)
             {
@@ -121,9 +123,9 @@ namespace NetMudCore.Controllers
 
         [HttpPost]
         [Route("api/ClientDataApi/ToggleMusicMute", Name = "ClientDataAPI_ToggleMusicMute")]
-        public async Task<JsonResult<bool>> ToggleMusicMuteAsync()
+        public async Task<JsonResult> ToggleMusicMuteAsync()
         {
-            ApplicationUser user = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
+            ApplicationUser? user = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
 
             if (user != null)
             {
@@ -136,23 +138,30 @@ namespace NetMudCore.Controllers
 
         [HttpPost]
         [Route("api/ClientDataApi/ToggleGossipParticipation", Name = "ClientDataAPI_ToggleGossipParticipation")]
-        public async Task<JsonResult<bool>> ToggleGossipParticipationAsync()
+        public async Task<JsonResult> ToggleGossipParticipationAsync()
         {
-            ApplicationUser user = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
+            ApplicationUser? user = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
 
             if (user != null)
             {
                 user.GameAccount.Config.GossipSubscriber = !user.GameAccount.Config.GossipSubscriber;
                 user.GameAccount.Config.Save(user.GameAccount, StaffRank.Admin);
+
+                return Json(user.GameAccount.Config.GossipSubscriber);
             }
 
-            return Json(user.GameAccount.Config.GossipSubscriber);
+            return Json(null);
         }
 		
         [HttpPost]
         public async Task<string> RemoveUIModuleContentAsync(string moduleName, int location)
         {
-            ApplicationUser user = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
+            ApplicationUser? user = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
+
+            if(user == null)
+            {
+                return "Invalid Account.";
+            }
 
             Data.Players.Account account = user.GameAccount;
 
@@ -202,7 +211,12 @@ namespace NetMudCore.Controllers
         [HttpPost]
         public async Task<string> SaveUIModuleContentAsync(string moduleName, int location)
         {
-            ApplicationUser user = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
+            ApplicationUser? user = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
+
+            if (user == null)
+            {
+                return "Invalid Account.";
+            }
 
             Data.Players.Account account = user.GameAccount;
 
@@ -249,15 +263,20 @@ namespace NetMudCore.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult<IEnumerable<Tuple<IUIModule, int>>>> LoadUIModulesAsync()
+        public async Task<JsonResult> LoadUIModulesAsync()
         {
-            ApplicationUser user = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
+            ApplicationUser? user = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
+
+            if (user == null)
+            {
+                return Json("Invalid Account.");
+            }
 
             Data.Players.Account account = user.GameAccount;
 
             if (account == null)
             {
-                return null;
+                return Json(null);
             }
 
             return Json(account.Config.UIModules);
@@ -265,9 +284,14 @@ namespace NetMudCore.Controllers
 
         [HttpGet]
         [Route("api/ClientDataApi/GetUIModuleNames", Name = "ClientDataAPI_GetUIModuleNames")]
-        public async Task<JsonResult<string[]>> GetUIModuleNamesAsync(string term)
+        public async Task<JsonResult> GetUIModuleNamesAsync(string term)
         {
-            ApplicationUser user = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
+            ApplicationUser? user = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
+
+            if (user == null)
+            {
+                return Json(Array.Empty<string>());
+            }
 
             Data.Players.Account account = user.GameAccount;
 
@@ -283,7 +307,7 @@ namespace NetMudCore.Controllers
 
         [HttpGet]
         [Route("api/ClientDataApi/GetAccountNames", Name = "ClientDataAPI_GetAccountNames")]
-        public JsonResult<string[]> GetAccountNames(string term)
+        public JsonResult GetAccountNames(string term)
         {
             IQueryable<ApplicationUser> accounts = UserManager.Users;
 
@@ -292,11 +316,16 @@ namespace NetMudCore.Controllers
 
         [HttpGet]
         [Route("api/ClientDataApi/GetCharacterNamesForAccount/{accountName}", Name = "ClientDataAPI_GetCharacterNamesForAccount")]
-        public async Task<JsonResult<string[]>> GetCharacterNamesForAccountAsync(string accountName, string term)
+        public async Task<JsonResult> GetCharacterNamesForAccountAsync(string accountName, string term)
         {
-            ApplicationUser user = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
+            ApplicationUser? user = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
 
-            IEnumerable<IPlayerTemplate> characters = PlayerDataCache.GetAll().Where(chr => chr.AccountHandle.Equals(user.GlobalIdentityHandle) && chr.Name.Contains(term));
+            if (user == null)
+            {
+                return Json(null);
+            }
+
+            IEnumerable<IPlayerTemplate> characters = PlayerDataCache.GetAll().Where(chr => chr.AccountHandle.Equals(accountName) && chr.Name.Contains(term));
 
             return Json(characters.Select(chr => chr.Name).ToArray());
         }

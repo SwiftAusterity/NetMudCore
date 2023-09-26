@@ -44,17 +44,17 @@ namespace NetMudCore.Controllers.GameAdmin
             if (authedUser != null && id >= 0)
             {
                 authedUser.GameAccount.CurrentlySelectedCharacter = id;
-                UserManager.Update(authedUser);
+                _ = UserManager.UpdateAsync(authedUser);
             }
 
-            return new JsonResult();
+            return Json(true);
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> IndexAsync(string SearchTerms = "", int CurrentPageNumber = 1, int ItemsPerPage = 20)
         {
-            RoleManager<IdentityRole> roleManager = new(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+            RoleManager<IdentityRole> roleManager = HttpContext.RequestServices.GetRequiredService<RoleManager<IdentityRole>>();
 
             ManagePlayersViewModel vModel = new(UserManager.Users)
             {
@@ -81,6 +81,12 @@ namespace NetMudCore.Controllers.GameAdmin
             {
                 ApplicationUser? authedUser = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
 
+                if(authedUser == null)
+                {
+                    message = "Error; Removal failed.";
+                    return RedirectToAction("Index", new { Message = message });
+                }
+
                 DataStructure.Players.IAccount obj = Account.GetByHandle(removeId);
 
                 if (obj == null)
@@ -103,7 +109,6 @@ namespace NetMudCore.Controllers.GameAdmin
             }
 
             return RedirectToAction("Index", new { Message = message });
-
         }
     }
 }
