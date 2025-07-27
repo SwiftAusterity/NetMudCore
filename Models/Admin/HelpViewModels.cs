@@ -1,8 +1,6 @@
 ﻿using NetMudCore.Data.Administrative;
 using NetMudCore.Data.Architectural.PropertyBinding;
 using NetMudCore.DataStructure.Administrative;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetMudCore.Models.Admin

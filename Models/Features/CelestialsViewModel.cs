@@ -1,6 +1,5 @@
 ﻿using NetMudCore.Authentication;
 using NetMudCore.DataStructure.Gaia;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetMudCore.Models.Features

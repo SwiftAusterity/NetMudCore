@@ -2,7 +2,6 @@
 using NetMudCore.Data.Architectural.DataIntegrity;
 using NetMudCore.Data.Architectural.EntityBase;
 using NetMudCore.Data.Architectural.PropertyBinding;
-using NetMudCore.Data.Architectural.Serialization;
 using NetMudCore.DataAccess;
 using NetMudCore.DataAccess.Cache;
 using NetMudCore.DataStructure.Administrative;

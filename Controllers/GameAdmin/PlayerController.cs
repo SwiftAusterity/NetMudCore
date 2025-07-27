@@ -2,7 +2,6 @@
 using NetMudCore.Data.Players;
 using NetMudCore.DataAccess;
 using NetMudCore.Models.Admin;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;

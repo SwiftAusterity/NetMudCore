@@ -3,8 +3,6 @@ using NetMudCore.Data.Architectural.PropertyBinding;
 using NetMudCore.DataStructure.Architectural;
 using NetMudCore.DataStructure.Architectural.PropertyValidation;
 using NetMudCore.DataStructure.Players;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetMudCore.Models.Admin

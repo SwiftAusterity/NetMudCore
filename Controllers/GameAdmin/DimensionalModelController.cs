@@ -118,10 +118,11 @@ namespace NetMudCore.Controllers.GameAdmin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddAsync(AddEditDimensionalModelDataViewModel vModel, HttpPostedFileBase modelFile)
+        public async Task<ActionResult> AddAsync(AddEditDimensionalModelDataViewModel vModel)
         {
             ApplicationUser? authedUser = await UserManager.FindByNameAsync(User.Identity?.Name ?? string.Empty);
             string message;
+
             try
             {
                 IDimensionalModelData newModel = vModel.DataObject;

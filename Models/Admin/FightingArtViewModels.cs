@@ -1,7 +1,5 @@
 ﻿using NetMudCore.Authentication;
 using NetMudCore.DataStructure.Combat;
-using System;
-using System.Collections.Generic;
 
 namespace NetMudCore.Models.Admin
 {

@@ -1,5 +1,4 @@
 ﻿using NetMudCore.DataStructure.Architectural.EntityBase;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetMudCore.Models.Admin

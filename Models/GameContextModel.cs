@@ -1,6 +1,5 @@
 ﻿using NetMudCore.Authentication;
 using NetMudCore.DataStructure.Players;
-using System.Collections.Generic;
 
 namespace NetMudCore.Models
 {

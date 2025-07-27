@@ -121,7 +121,7 @@ namespace NetMudCore.DataAccess.FileSystem
                 using (FileStream stream = File.Open(currentBackupDirectory + GetPlayerFilename(chr.Id), FileMode.Open))
                 {
                     fileData = new byte[stream.Length];
-                    stream.Read(fileData, 0, (int)stream.Length);
+                    stream.ReadExactly(fileData, 0, (int)stream.Length);
                 }
 
                 //no player file to load, derp

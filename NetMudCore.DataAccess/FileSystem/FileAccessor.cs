@@ -74,7 +74,7 @@ namespace NetMudCore.DataAccess.FileSystem
             {
                 using FileStream stream = File.Open(filePath, FileMode.Open);
                 bytes = new byte[stream.Length];
-                stream.Read(bytes, 0, (int)stream.Length);
+                stream.ReadExactly(bytes, 0, (int)stream.Length);
             }
 
             return bytes;
@@ -92,7 +92,7 @@ namespace NetMudCore.DataAccess.FileSystem
             using (FileStream stream = file.Open(FileMode.Open))
             {
                 bytes = new byte[stream.Length];
-                stream.Read(bytes, 0, (int)stream.Length);
+                stream.ReadExactly(bytes, 0, (int)stream.Length);
             }
 
             return bytes;

@@ -6,15 +6,12 @@ using NetMudCore.Data.Room;
 using NetMudCore.Data.Zone;
 using NetMudCore.DataStructure.Architectural.EntityBase;
 using NetMudCore.DataStructure.Architectural.PropertyBinding;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 
 namespace NetMudCore.Models
 {
-    public class InterfaceModelBinder : DefaultModelBinder
+    public class InterfaceModelBinder : Microsoft.AspNetCore.Mvc.ModelBinding.Binders.ComplexObjectModelBinder
     {
         protected override object CreateModel(ControllerContext controllerContext, ModelBindingContext bindingContext, Type modelType)
         {
@@ -175,16 +172,13 @@ namespace NetMudCore.Models
                                 //I guess we didnt have a class so just try and use the modelbinder to convert the value correctly
                                 ValueProviderResult childValue = bindingContext.ValueProvider.GetValue(childKeyName);
 
-                                if (childValue != null)
+                                if (childBinder != null)
                                 {
-                                    if (childBinder != null)
-                                    {
-                                        props[i] = childBinder.Convert(childValue);
-                                    }
-                                    else
-                                    {
-                                        props[i] = childValue.AttemptedValue;
-                                    }
+                                    props[i] = childBinder.Convert(childValue);
+                                }
+                                else
+                                {
+                                    props[i] = childValue;
                                 }
                             }
 

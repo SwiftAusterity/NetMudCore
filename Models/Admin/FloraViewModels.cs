@@ -4,8 +4,6 @@ using NetMudCore.DataAccess.Cache;
 using NetMudCore.DataStructure.Architectural.EntityBase;
 using NetMudCore.DataStructure.Inanimate;
 using NetMudCore.DataStructure.NaturalResource;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 

@@ -7,8 +7,6 @@ using NetMudCore.DataStructure.Administrative;
 using NetMudCore.DataStructure.Inanimate;
 using NetMudCore.DataStructure.Linguistic;
 using NetMudCore.Models.Admin;
-using System;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;

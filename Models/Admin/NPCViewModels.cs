@@ -4,8 +4,6 @@ using NetMudCore.DataAccess.Cache;
 using NetMudCore.DataStructure.Architectural.ActorBase;
 using NetMudCore.DataStructure.Inanimate;
 using NetMudCore.DataStructure.NPC;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetMudCore.Models.Admin

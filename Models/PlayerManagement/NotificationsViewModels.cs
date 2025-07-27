@@ -1,7 +1,5 @@
 ﻿using NetMudCore.Authentication;
 using NetMudCore.DataStructure.Players;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetMudCore.Models.Admin

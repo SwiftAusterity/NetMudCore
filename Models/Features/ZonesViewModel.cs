@@ -1,6 +1,5 @@
 ﻿using NetMudCore.Authentication;
 using NetMudCore.DataStructure.Zone;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetMudCore.Models.Features

@@ -1,8 +1,6 @@
 ﻿using NetMudCore.Authentication;
 using NetMudCore.DataAccess.Cache;
 using NetMudCore.DataStructure.Combat;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace NetMudCore.Models.Admin
