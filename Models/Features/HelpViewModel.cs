@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMudCore.Models.Features
 {
-    public class HelpViewModel : IBaseViewModel
+    public class HelpViewModel(IEnumerable<IHelp> items) : IBaseViewModel
     {
         public ApplicationUser? AuthedUser { get; set; }
 
-        public IEnumerable<IHelp> Items { get; set; }
+        public IEnumerable<IHelp> Items { get; set; } = items;
 
         [Display(Name = "Search Term", Description = "Filter by the subject or body of the help files.")]
         [DataType(DataType.Text)]
@@ -17,10 +17,5 @@ namespace NetMudCore.Models.Features
         [Display(Name = "In-Game", Description = "Include help content from in-game entity types and commands.")]
         [UIHint("Boolean")]
         public bool IncludeInGame { get; set; }
-
-        public HelpViewModel(IEnumerable<IHelp> items)
-        {
-            Items = items;
-        }
     }
 }

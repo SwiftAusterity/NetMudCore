@@ -4,19 +4,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMudCore.Models.Features
 {
-    public class DimensionalModelsViewData : IBaseViewModel
+    public class DimensionalModelsViewData(IEnumerable<IDimensionalModel> items) : IBaseViewModel
     {
         public ApplicationUser? AuthedUser { get; set; }
 
-        public IEnumerable<IDimensionalModel> Items { get; set; }
+        public IEnumerable<IDimensionalModel> Items { get; set; } = items;
 
         [Display(Name = "Search Term", Description = "Filter by the name of the item.")]
         [DataType(DataType.Text)]
         public string SearchTerm { get; set; }
-
-        public DimensionalModelsViewData(IEnumerable<IDimensionalModel> items)
-        {
-            Items = items;
-        }
     }
 }

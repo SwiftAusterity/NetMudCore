@@ -4,19 +4,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NetMudCore.Models.Features
 {
-    public class FloraViewModel : IBaseViewModel
+    public class FloraViewModel(IEnumerable<IFlora> items) : IBaseViewModel
     {
         public ApplicationUser? AuthedUser { get; set; }
 
-        public IEnumerable<IFlora> Items { get; set; }
+        public IEnumerable<IFlora> Items { get; set; } = items;
 
         [Display(Name = "Search Term", Description = "Filter by the name of the item.")]
         [DataType(DataType.Text)]
         public string SearchTerm { get; set; }
-
-        public FloraViewModel(IEnumerable<IFlora> items)
-        {
-            Items = items;
-        }
     }
 }

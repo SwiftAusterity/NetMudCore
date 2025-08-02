@@ -6,13 +6,18 @@ namespace NetMudCore.Data.Architectural.DataIntegrity
     /// <summary>
     /// Field must not be null and also have stuff in it
     /// </summary>
+    /// <remarks>
+    /// Creates an attribute
+    /// </remarks>
+    /// <param name="errorMessage">error to display when this fails the integrity check</param>
+    /// <param name="warning">Not a required field but will display on the editor itself</param>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class FilledContainerDataIntegrityAttribute : BaseDataIntegrity
+    public class FilledContainerDataIntegrityAttribute(string errorMessage, int minimumCapacity = 1) : BaseDataIntegrity(errorMessage, true)
     {
         /// <summary>
         /// Lower value for range. Is a greater than not a greater or equals
         /// </summary>
-        public int MinimumCapacity { get; private set; }
+        public int MinimumCapacity { get; private set; } = minimumCapacity;
 
         /// <summary>
         /// How to check against this result; returns true if it passes Longegrity
@@ -52,16 +57,6 @@ namespace NetMudCore.Data.Architectural.DataIntegrity
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// Creates an attribute
-        /// </summary>
-        /// <param name="errorMessage">error to display when this fails the integrity check</param>
-        /// <param name="warning">Not a required field but will display on the editor itself</param>
-        public FilledContainerDataIntegrityAttribute(string errorMessage, int minimumCapacity = 1) : base(errorMessage, true)
-        {
-            MinimumCapacity = minimumCapacity;
         }
     }
 }

@@ -5,8 +5,13 @@ namespace NetMudCore.Data.Architectural.DataIntegrity
     /// <summary>
     /// Field must not be null (doesn't allow multiple as.. why would you need that)
     /// </summary>
+    /// <remarks>
+    /// Creates an attribute
+    /// </remarks>
+    /// <param name="errorMessage">error to display when this fails the integrity check</param>
+    /// <param name="warning">Not a required field but will display on the editor itself</param>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class NonNullableDataIntegrityAttribute : BaseDataIntegrity
+    public class NonNullableDataIntegrityAttribute(string errorMessage) : BaseDataIntegrity(errorMessage, true)
     {
 
         /// <summary>
@@ -20,15 +25,6 @@ namespace NetMudCore.Data.Architectural.DataIntegrity
             }
 
             return val != null;
-        }
-
-        /// <summary>
-        /// Creates an attribute
-        /// </summary>
-        /// <param name="errorMessage">error to display when this fails the integrity check</param>
-        /// <param name="warning">Not a required field but will display on the editor itself</param>
-        public NonNullableDataIntegrityAttribute(string errorMessage) : base(errorMessage, true)
-        {
         }
     }
 }

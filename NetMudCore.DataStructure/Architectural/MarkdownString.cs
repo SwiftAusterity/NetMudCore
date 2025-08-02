@@ -7,14 +7,9 @@ using System.Text;
 namespace NetMudCore.DataStructure.Architectural
 {
     [Serializable]
-    public class MarkdownString : IComparable<MarkdownString>, IEquatable<MarkdownString>, IEqualityComparer<MarkdownString>, IComparable<string>, IEquatable<string>, IEqualityComparer<string>
+    public class MarkdownString(string value) : IComparable<MarkdownString>, IEquatable<MarkdownString>, IEqualityComparer<MarkdownString>, IComparable<string>, IEquatable<string>, IEqualityComparer<string>
     {
-        public string Value { get; set; }
-
-        public MarkdownString(string value)
-        {
-            Value = value;
-        }
+        public string Value { get; set; } = value;
 
         public static implicit operator string(MarkdownString d)
         {

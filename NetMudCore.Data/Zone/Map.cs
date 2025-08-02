@@ -7,23 +7,17 @@ namespace NetMudCore.Data.Zone
     /// A 3d matrix map of rooms
     /// </summary>
     [Serializable]
-    public class Map : IMap
+    public class Map(long[,,] coordinateMap, bool isPartial) : IMap
     {
         /// <summary>
         /// The map of room IDs
         /// </summary>
-        public long[,,] CoordinatePlane { get; set; }
+        public long[,,] CoordinatePlane { get; set; } = coordinateMap;
 
         /// <summary>
         /// Is this a partial map
         /// </summary>
-        public bool Partial { get; private set; }
-
-        public Map(long[,,] coordinateMap, bool isPartial)
-        {
-            CoordinatePlane = coordinateMap;
-            Partial = isPartial;
-        }
+        public bool Partial { get; private set; } = isPartial;
 
         /// <summary>
         /// Get a single flat plane of the main map at a specific zIndex

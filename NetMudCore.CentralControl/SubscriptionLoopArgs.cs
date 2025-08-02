@@ -1,15 +1,9 @@
 ﻿namespace NetMudCore.CentralControl
 {
-    public class SubscriptionLoopArgs
+    public class SubscriptionLoopArgs(string designation, int pulse)
     {
-        public int CurrentPulse { get; set; }
+        public int CurrentPulse { get; set; } = pulse;
 
-        public string Designation { get; set; }
-
-        public SubscriptionLoopArgs(string designation, int pulse)
-        {
-            CurrentPulse = pulse;
-            Designation = designation;
-        }
+        public string Designation { get; set; } = designation;
     }
 }

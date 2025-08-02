@@ -9,24 +9,15 @@ using System.Text.Json;
 
 namespace NetMudCore.Lexica.DeepLex
 {
-    public class MirriamWebsterHarness
+    public class MirriamWebsterHarness(string dictionaryKey, string thesaurusKey)
     {
         private static string DictionaryEndpoint => "https://www.dictionaryapi.com/api/v3/references/collegiate/json/";
         private static string ThesaurusEndpoint => "https://www.dictionaryapi.com/api/v3/references/thesaurus/json/";
-        private string DictionaryKey { get; }
-        private string ThesaurusKey { get; }
-        public int MaxAttempts { get; private set; }
-        public int DictionaryAttempts { get; private set; }
-        public int ThesaurusAttempts { get; private set; }
-
-        public MirriamWebsterHarness(string dictionaryKey, string thesaurusKey)
-        {
-            DictionaryKey = dictionaryKey;
-            ThesaurusKey = thesaurusKey;
-            DictionaryAttempts = 0;
-            ThesaurusAttempts = 0;
-            MaxAttempts = 1000;
-        }
+        private string DictionaryKey { get; } = dictionaryKey;
+        private string ThesaurusKey { get; } = thesaurusKey;
+        public int MaxAttempts { get; private set; } = 1000;
+        public int DictionaryAttempts { get; private set; } = 0;
+        public int ThesaurusAttempts { get; private set; } = 0;
 
         public DictionaryEntry GetDictionaryEntry(string word)
         {

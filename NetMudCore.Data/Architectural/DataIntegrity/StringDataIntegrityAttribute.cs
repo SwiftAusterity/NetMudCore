@@ -6,18 +6,23 @@ namespace NetMudCore.Data.Architectural.DataIntegrity
     /// <summary>
     /// Details what keywords match a command
     /// </summary>
+    /// <remarks>
+    /// Creates a data integrity attribute
+    /// </remarks>
+    /// <param name="errorMessage">error to display when this fails the integrity check</param>
+    /// <param name="warning">Not a required field but will display on the editor itself</param>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public class StringDataIntegrityAttribute : BaseDataIntegrity
+    public class StringDataIntegrityAttribute(string errorMessage, int minimumLength = 0, int maximumLength = 9999, bool warning = false) : BaseDataIntegrity(errorMessage, warning)
     {
         /// <summary>
         /// Min length for the string; Is a greater than or equal to.
         /// </summary>
-        public int MinimumLength { get; private set; }
+        public int MinimumLength { get; private set; } = minimumLength;
 
         /// <summary>
         /// Min length for the string; Is a less than or equal to
         /// </summary>
-        public int MaximumLength { get; private set; }
+        public int MaximumLength { get; private set; } = maximumLength;
 
         /// <summary>
         /// How to check against this result; returns true if it passes integrity
@@ -41,17 +46,6 @@ namespace NetMudCore.Data.Architectural.DataIntegrity
             }
 
             return !string.IsNullOrWhiteSpace(compareValue) && compareValue.Length >= MinimumLength && compareValue.Length <= MaximumLength;
-        }
-
-        /// <summary>
-        /// Creates a data integrity attribute
-        /// </summary>
-        /// <param name="errorMessage">error to display when this fails the integrity check</param>
-        /// <param name="warning">Not a required field but will display on the editor itself</param>
-        public StringDataIntegrityAttribute(string errorMessage, int minimumLength = 0, int maximumLength = 9999, bool warning = false) : base(errorMessage, warning)
-        {
-            MinimumLength = minimumLength;
-            MaximumLength = maximumLength;
         }
     }
 }
